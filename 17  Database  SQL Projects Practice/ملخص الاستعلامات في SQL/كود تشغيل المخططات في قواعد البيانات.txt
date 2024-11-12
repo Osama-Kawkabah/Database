@@ -1,0 +1,3 @@
+use Shop_Database;
+
+EXEC sp_changedbowner 'sa';

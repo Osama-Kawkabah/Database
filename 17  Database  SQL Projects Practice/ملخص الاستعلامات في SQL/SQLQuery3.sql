@@ -1,0 +1,203 @@
+-- «·Õ’Ê· ⁄·Ï Ã„Ì⁄ «·”Ì«—«  «· Ì  Õ ÊÌ ⁄·Ï „Õ—ﬂ«  √ﬂ»— „‰ 3 · —«  Ê·Â« »«»«‰ ›ﬁÿ
+SELECT * 
+FROM VehicleDetails
+WHERE Engine_Liter_Display > 3 AND NumDoors = 2
+ORDER BY VehicleDetails.Engine_Liter_Display ASC; 
+
+-- «·Õ’Ê· ⁄·Ï «·⁄·«„«  «· Ã«—Ì… Ê«·„—ﬂ»«  «· Ì  Õ ÊÌ ⁄·Ï "OHV" ›Ì «·„Õ—ﬂ Ê·Â« 4 √”ÿÊ«‰« 
+SELECT Makes.Make, VehicleDetails.*
+FROM VehicleDetails
+INNER JOIN Makes ON VehicleDetails.MakeID = Makes.MakeID
+WHERE VehicleDetails.Engine LIKE '%OHV%' AND VehicleDetails.Engine_Cylinders = 4;
+
+-- «·Õ’Ê· ⁄·Ï Ã„Ì⁄ «·”Ì«—«  «· Ì ÂÌ „‰ ‰Ê⁄ ÂÌﬂ· "Sport Utility" Ê”‰ Â« √ﬂ»— „‰ 2020
+SELECT BodyName, VehicleDetails.*
+FROM VehicleDetails
+INNER JOIN Bodies ON VehicleDetails.BodyID = Bodies.BodyID
+WHERE BodyName = 'Sport Utility' AND Year > 2020;
+
+-- «·Õ’Ê· ⁄·Ï Ã„Ì⁄ «·”Ì«—«  «· Ì ÌﬂÊ‰ ‰Ê⁄ ÂÌﬂ·Â« "Coupe" √Ê "Hatchback" √Ê "Sedan"
+SELECT BodyName, VehicleDetails.*
+FROM VehicleDetails
+INNER JOIN Bodies ON VehicleDetails.BodyID = Bodies.BodyID
+WHERE BodyName IN ('Coupe', 'Hatchback', 'Sedan');
+
+-- «·Õ’Ê· ⁄·Ï Ã„Ì⁄ «·”Ì«—«  «· Ì ÌﬂÊ‰ ‰Ê⁄ ÂÌﬂ·Â« "Coupe" √Ê "Hatchback" √Ê "Sedan" Ê”‰ Â« 2008 √Ê 2020 √Ê 2021
+SELECT BodyName, VehicleDetails.*
+FROM VehicleDetails
+INNER JOIN Bodies ON VehicleDetails.BodyID = Bodies.BodyID
+WHERE BodyName IN ('Coupe', 'Hatchback', 'Sedan') 
+AND Year IN (2008, 2020, 2021);
+
+-- ≈—Ã«⁄ «·ﬁÌ„… 1 ≈–« ﬂ«‰  Â‰«ﬂ √Ì ”Ì«—…  „  ’‰Ì⁄Â« ›Ì ⁄«„ 1950
+SELECT found = 1 
+WHERE EXISTS (SELECT TOP 1 * FROM VehicleDetails WHERE Year = 1950);
+
+-- «·Õ’Ê· ⁄·Ï «”„ «·”Ì«—… Ê⁄œœ «·√»Ê«» Ê≈÷«›… ⁄„Êœ · ’‰Ì› ⁄œœ «·√»Ê«»
+SELECT VehicleDetails.Vehicle_Display_Name, NumDoors,
+    CASE
+        WHEN NumDoors = 0 THEN 'Zero doors'
+        WHEN NumDoors = 1 THEN 'One doors'
+        WHEN NumDoors = 2 THEN 'Two doors'
+        WHEN NumDoors = 3 THEN 'Three doors'
+        WHEN NumDoors = 4 THEN 'Four doors'
+        WHEN NumDoors = 5 THEN 'Five doors'
+        WHEN NumDoors = 6 THEN 'Six doors'
+        WHEN NumDoors = 8 THEN 'Eight doors'
+        WHEN NumDoors IS NULL THEN 'Not Set'
+        ELSE 'Unknown'
+    END AS DOOR_Display
+FROM VehicleDetails;
+
+-- «·Õ’Ê· ⁄·Ï «”„ «·”Ì«—… Ê”‰ Â« Ê≈÷«›… ⁄„Êœ ·Õ”«» ⁄„— «·”Ì«—… À„  — Ì» «·‰ «∆Ã Õ”» «·⁄„—  ‰«“·Ì«
+SELECT VehicleDetails.Vehicle_Display_Name, Year, Age = YEAR(GETDATE()) - VehicleDetails.Year
+FROM VehicleDetails
+ORDER BY Age DESC;
+
+-- «·Õ’Ê· ⁄·Ï «”„ «·”Ì«—… Ê”‰ Â« Ê⁄„—Â« ··”Ì«—«  «· Ì Ì —«ÊÕ ⁄„—Â« »Ì‰ 15 Ê 25 ”‰…
+SELECT *
+FROM (
+    SELECT VehicleDetails.Vehicle_Display_Name, Year, Age = YEAR(GETDATE()) - VehicleDetails.Year
+    FROM VehicleDetails
+) R1
+WHERE Age BETWEEN 15 AND 25;
+
+-- «·Õ’Ê· ⁄·Ï «·Õœ «·√œ‰Ï Ê«·√ﬁ’Ï Ê«·„ Ê”ÿ ·”⁄… «·„Õ—ﬂ ·Ã„Ì⁄ «·”Ì«—« 
+SELECT MIN(Engine_CC) AS MinimumEngineCC, 
+       MAX(Engine_CC) AS MaximumEngineCC, 
+       AVG(Engine_CC) AS AverageEngineCC
+FROM VehicleDetails;
+
+-- «·Õ’Ê· ⁄·Ï √”„«¡ «·”Ì«—«  «· Ì  Õ ÊÌ ⁄·Ï √ﬁ· ”⁄… „Õ—ﬂ
+SELECT VehicleDetails.Vehicle_Display_Name
+FROM VehicleDetails
+WHERE Engine_CC = (SELECT MIN(Engine_CC) FROM VehicleDetails);
+
+-- «·Õ’Ê· ⁄·Ï √”„«¡ «·”Ì«—«  «· Ì  Õ ÊÌ ⁄·Ï √⁄·Ï ”⁄… „Õ—ﬂ
+SELECT VehicleDetails.Vehicle_Display_Name
+FROM VehicleDetails
+WHERE Engine_CC = (SELECT MAX(Engine_CC) FROM VehicleDetails);
+
+-- «·Õ’Ê· ⁄·Ï √”„«¡ «·”Ì«—«  «· Ì  Õ ÊÌ ⁄·Ï ”⁄… „Õ—ﬂ √ﬁ· „‰ «·„ Ê”ÿ
+SELECT VehicleDetails.Vehicle_Display_Name
+FROM VehicleDetails
+WHERE Engine_CC < (SELECT AVG(Engine_CC) FROM VehicleDetails);
+
+-- «·Õ’Ê· ⁄·Ï ≈Ã„«·Ì ⁄œœ «·”Ì«—«  «· Ì  Õ ÊÌ ⁄·Ï ”⁄… „Õ—ﬂ √⁄·Ï „‰ «·„ Ê”ÿ
+SELECT COUNT(*) AS NumberOfVehiclesAboveAverageEngineCC
+FROM (
+    SELECT ID, VehicleDetails.Vehicle_Display_Name
+    FROM VehicleDetails
+    WHERE Engine_CC > (SELECT AVG(Engine_CC) FROM VehicleDetails)
+) R1;
+
+-- «·Õ’Ê· ⁄·Ï Ã„Ì⁄ «·ﬁÌ„ «·›—Ìœ… ·”⁄… «·„Õ—ﬂ Ê — Ì»Â«  ‰«“·Ì«
+SELECT DISTINCT Engine_CC 
+FROM VehicleDetails
+ORDER BY Engine_CC DESC;
+
+-- «·Õ’Ê· ⁄·Ï √⁄·Ï 3 ﬁÌ„ ·”⁄… «·„Õ—ﬂ
+SELECT DISTINCT TOP 3 Engine_CC 
+FROM VehicleDetails
+ORDER BY Engine_CC DESC;
+
+-- «·Õ’Ê· ⁄·Ï Ã„Ì⁄ «·”Ì«—«  «· Ì  Õ ÊÌ ⁄·Ï Ê«Õœ… „‰ √⁄·Ï 3 ﬁÌ„ ·”⁄… «·„Õ—ﬂ
+SELECT Vehicle_Display_Name 
+FROM VehicleDetails
+WHERE Engine_CC IN (
+    SELECT DISTINCT TOP 3 Engine_CC 
+    FROM VehicleDetails
+    ORDER BY Engine_CC DESC
+);
+
+-- «·Õ’Ê· ⁄·Ï Ã„Ì⁄ «·⁄·«„«  «· Ã«—Ì… «· Ì  ’‰⁄ ”Ì«—«   Õ ÊÌ ⁄·Ï Ê«Õœ… „‰ √⁄·Ï 3 ﬁÌ„ ·”⁄… «·„Õ—ﬂ
+SELECT DISTINCT Makes.Make
+FROM VehicleDetails 
+INNER JOIN Makes ON VehicleDetails.MakeID = Makes.MakeID
+WHERE VehicleDetails.Engine_CC IN (
+    SELECT DISTINCT TOP 3 Engine_CC 
+    FROM VehicleDetails
+    ORDER BY Engine_CC DESC
+)
+ORDER BY Makes.Make;
+
+-- «·Õ’Ê· ⁄·Ï ÃœÊ· ÌÕ ÊÌ ⁄·Ï ﬁÌ„ ›—Ìœ… ·”⁄… «·„Õ—ﬂ ÊÕ”«» «·÷—Ì»… ·ﬂ· ”⁄… „Õ—ﬂ ﬂ«· «·Ì:
+-- 0 ≈·Ï 1000 «·÷—Ì»… = 100
+-- 1001 ≈·Ï 2000 «·÷—Ì»… = 200
+-- 2001 ≈·Ï 4000 «·÷—Ì»… = 300
+-- 4001 ≈·Ï 6000 «·÷—Ì»… = 400
+-- 6001 ≈·Ï 8000 «·÷—Ì»… = 500
+-- √ﬂÀ— „‰ 8000 «·÷—Ì»… = 600
+-- »Œ·«› –·ﬂ «·÷—Ì»… = 0
+SELECT Engine_CC,
+    CASE
+        WHEN Engine_CC BETWEEN 0 AND 1000 THEN 100
+        WHEN Engine_CC BETWEEN 1001 AND 2000 THEN 200
+        WHEN Engine_CC BETWEEN 2001 AND 4000 THEN 300
+        WHEN Engine_CC BETWEEN 4001 AND 6000 THEN 400
+        WHEN Engine_CC BETWEEN 6001 AND 8000 THEN 500
+        WHEN Engine_CC > 8000 THEN 600    
+        ELSE 0
+    END AS Tax
+FROM (
+    SELECT DISTINCT Engine_CC FROM VehicleDetails
+) R1
+ORDER BY Engine_CC;
+
+-- «·Õ’Ê· ⁄·Ï «·⁄·«„… «· Ã«—Ì… Ê≈Ã„«·Ì ⁄œœ «·√»Ê«» «·„’‰⁄… ·ﬂ· ⁄·«„…  Ã«—Ì…
+SELECT Makes.Make, SUM(VehicleDetails.NumDoors) AS TotalNumberOfDoors
+FROM VehicleDetails 
+INNER JOIN Makes 
+ON VehicleDetails.MakeID = Makes.MakeID
+GROUP BY Makes.Make
+ORDER BY TotalNumberOfDoors DESC;
+
+
+-- Get Total Number Of Doors Manufactured by 'Ford'
+SELECT        Makes.Make, Sum(VehicleDetails.NumDoors) AS TotalNumberOfDoors
+FROM            VehicleDetails INNER JOIN
+Makes ON VehicleDetails.MakeID = Makes.MakeID
+Group By Make
+Having Make = 'Ford'
+
+-- Get Number of Models Per Make
+SELECT Makes.Make, COUNT(*) AS NumberOfModels
+FROM  Makes INNER JOIN
+MakeModels ON Makes.MakeID = MakeModels.MakeID
+GROUP BY Makes.Make
+Order By NumberOfModels Desc
+
+-- Get the highest 3 manufacturers that make the highest number of models
+SELECT top 3  Makes.Make, COUNT(*) AS NumberOfModels
+FROM Makes INNER JOIN
+ MakeModels ON Makes.MakeID = MakeModels.MakeID
+GROUP BY Makes.Make
+Order By NumberOfModels Desc
+
+-- Get the highest number of models manufactured
+select Max(NumberOfModels) as MaxNumberOfModels
+from
+(
+SELECT Makes.Make, COUNT(*) AS NumberOfModels
+FROM  Makes INNER JOIN
+MakeModels ON Makes.MakeID = MakeModels.MakeID
+GROUP BY Makes.Make
+) R1
+
+
+SELECT Makes.MaxNumberOfModels FROM (
+select Max(NumberOfModels) as MaxNumberOfModels
+from
+(
+SELECT Makes.Make, COUNT(*) AS NumberOfModels
+FROM  Makes INNER JOIN
+MakeModels ON Makes.MakeID = MakeModels.MakeID
+GROUP BY Makes.Make
+) R1
+
+)Makes
+
+
+-- Get the highest Manufacturers manufactured the highest number of models , 
+-- remember that they could be more than one manufacturer have the same high number of models
+

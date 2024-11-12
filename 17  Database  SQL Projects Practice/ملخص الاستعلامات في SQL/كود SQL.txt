@@ -1,0 +1,41 @@
+
+
+-- تحديد الاسم الكامل والجنس والقسم واسم البلد والراتب الشهري بعد التعديل من جدول الموظفين
+SELECT  
+    FullName = Employees.FirstName + '_' + Employees.LastName,  -- الاسم الكامل للموظف بتنسيق الاسم الأول والاسم الأخير معًا بفاصل _
+    
+    -- تحديد جنس الموظف
+    CASE 
+        WHEN Employees.Gendor = 'F' THEN 'Female'  -- إذا كان جنس الموظف 'F' يكون 'Female'
+        WHEN Employees.Gendor = 'M' THEN 'Male'  -- إذا كان جنس الموظف 'M' يكون 'Male'
+        ELSE 'Unknown'  -- في حالات أخرى يكون 'Unknown'
+    END AS Gendor,
+    
+    -- تحديد اسم القسم
+    CASE 
+        WHEN Departments.Name = 'IT' THEN 'information technology'  -- إذا كان اسم القسم 'IT' يكون 'information technology'
+        ELSE Departments.Name  -- في حالات أخرى يتم إرجاع اسم القسم كما هو
+    END AS Departments,
+    
+    Countries.Name AS CountryName,  -- اسم البلد
+    
+    -- تعديل الراتب الشهري
+    CASE 
+        WHEN Employees.Gendor = 'F' THEN Employees.MonthlySalary * 1.1  -- إذا كان جنس الموظف 'F' يتم ضرب الراتب الشهري في 1.1
+        WHEN Employees.Gendor = 'M' THEN Employees.MonthlySalary * 1.1  -- إذا كان جنس الموظف 'M' يتم ضرب الراتب الشهري في 1.1
+        ELSE Employees.MonthlySalary  -- في حالات أخرى يتم إرجاع الراتب الشهري كما هو
+    END AS AdjustedSalary  -- اسم الحقل الناتج يكون AdjustedSalary
+
+FROM 
+    Employees  -- جدول الموظفين
+INNER JOIN 
+    Countries  -- جدول البلدان
+ON 
+    Employees.CountryID = Countries.ID  -- ربط جدول البلدان بجدول الموظفين باستخدام حقل التعريف في البلد
+INNER JOIN 
+    Departments  -- جدول الأقسام
+ON 
+    Employees.DepartmentID = Departments.ID  -- ربط جدول الأقسام بجدول الموظفين باستخدام حقل التعريف في القسم
+
+ORDER BY 
+    Employees.FirstName ASC;  -- ترتيب النتائج تصاعديًا حسب الاسم الأول للموظف

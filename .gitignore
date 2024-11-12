@@ -1,0 +1,64 @@
+# ملفات C# والمجلدات ذات الصلة
+bin/
+obj/
+[Ll]og/
+[Ll]ogs/
+
+# ملفات النواتج المؤقتة والمجمّعة
+*.dll
+*.exe
+*.app
+*.so
+*.dylib
+*.nupkg
+*.snupkg
+*.log
+*.cache
+*.pdb
+*.mdb
+
+# ملفات وأدوات Visual Studio
+.vscode/
+.vs/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+*.cache/
+*.sln*
+*.csproj.user
+ipch/
+tlog/
+*.lastbuildstate
+
+# مجلدات إعادة البناء
+TestResults/
+ClientBin/
+Backup*/
+sql/
+Dump/
+
+# ملفات NuGet وPackage Management
+*.nuget/
+*.snupkg
+packages/
+# لجعل Visual Studio يحمل الحزم من جديد
+!packages/repositories.config
+
+# ملفات .NET وAzure
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.Azure.* 
+*.AzureComputeEmulator/
+aspnet_client/
+ServiceFabricBackup/
+
+# ملفات الفحص وإعداد التكوينات
+*.Coverage
+*.codecoverage
+*.config
+*.dotCover
+*.swo
+*.swn
